@@ -14,7 +14,7 @@ data:
 	$(PY) -m src.data.generate_synthetic_credit_data
 
 validate:
-	$(PY) -m src.data.validate
+	$(PY) -m src.data.validation
 
 features:
 	$(PY) -m src.features.build_features

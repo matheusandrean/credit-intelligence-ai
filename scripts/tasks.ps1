@@ -24,7 +24,7 @@ switch ($Task) {
         & $PY -m pre_commit install
     }
     "data" { & $PY -m src.data.generate_synthetic_credit_data }
-    "validate" { & $PY -m src.data.validate }
+    "validate" { & $PY -m src.data.validation }
     "features" { & $PY -m src.features.build_features }
     "train" { & $PY -m src.models.train }
     "test" { & $PY -m pytest --cov=src --cov=api --cov-report=term-missing }
