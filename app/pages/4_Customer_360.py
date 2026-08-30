@@ -9,15 +9,15 @@ import streamlit as st
 from app.theme import BAND_COLORS, configure_page, demo_data_disclaimer, require_artifacts
 from src.llm.tools.registry import call_tool
 
-configure_page("Customer 360", icon="\U0001f464")
-st.title("Customer 360")
+configure_page("Visão 360 do Cliente", icon="\U0001f464")
+st.title("Visão 360 do Cliente")
 demo_data_disclaimer()
 
 if not require_artifacts():
     st.stop()
 
 default_id = "CUST_000001"
-customer_id = st.text_input("Customer ID", value=default_id, help="e.g. CUST_000123")
+customer_id = st.text_input("ID do Cliente", value=default_id, help="ex.: CUST_000123")
 
 if not customer_id:
     st.stop()
@@ -31,43 +31,44 @@ if not profile_result["ok"]:
 data = profile_result["data"]
 band = data["risk_band"]
 
-st.markdown(f"### {customer_id.upper()} — Band **{band}**")
+st.markdown(f"### {customer_id.upper()} — Faixa **{band}**")
 c1, c2, c3, c4 = st.columns(4)
-c1.metric("Probability of Default", f"{data['pd']:.2%}")
-c2.metric("Illustrative Score", f"{data['score']:.0f}")
-c3.metric("Risk Band", band)
+c1.metric("Probabilidade de Default (PD)", f"{data['pd']:.2%}")
+c2.metric("Score Ilustrativo", f"{data['score']:.0f}")
+c3.metric("Faixa de Risco", band)
 c4.metric("Expected Loss", f"${data['expected_loss']:,.2f}")
 
 behavior = data.get("behavior", {})
 if behavior:
-    st.markdown("#### Observed Behavior")
+    st.markdown("#### Comportamento Observado")
     b1, b2, b3 = st.columns(3)
     b1.metric(
-        "Monthly income",
-        f"${behavior['monthly_income']:,.0f}" if behavior["monthly_income"] else "n/a",
+        "Renda mensal",
+        f"${behavior['monthly_income']:,.0f}" if behavior["monthly_income"] else "n/d",
     )
     b2.metric(
-        "Debt-to-Income",
-        f"{behavior['debt_to_income']:.2f}" if behavior["debt_to_income"] else "n/a",
+        "Comprometimento de Renda (DTI)",
+        f"{behavior['debt_to_income']:.2f}" if behavior["debt_to_income"] else "n/d",
     )
     b3.metric(
-        "Credit utilization",
+        "Utilização de crédito",
         (
             f"{behavior['credit_utilization']:.2%}"
             if behavior["credit_utilization"] is not None
-            else "n/a"
+            else "n/d"
         ),
     )
     b4, b5, b6 = st.columns(3)
-    b4.metric("Late payments (12m)", behavior["late_payments_12m"])
-    b5.metric("Previous default", "Yes" if behavior["previous_default_flag"] else "No")
-    b6.metric("Account tenure (months)", behavior["account_tenure_months"])
+    b4.metric("Atrasos de pagamento (12m)", behavior["late_payments_12m"])
+    b5.metric("Default anterior", "Sim" if behavior["previous_default_flag"] else "Não")
+    b6.metric("Tempo de relacionamento (meses)", behavior["account_tenure_months"])
 
 st.markdown("---")
-st.subheader("Explainability (SHAP)")
+st.subheader("Explicabilidade (SHAP)")
 st.caption(
-    "Top factors are computed by SHAP on the champion model's raw decision function. "
-    "The LLM layer is only allowed to narrate these values, never invent new ones."
+    "Os principais fatores são calculados pelo SHAP sobre a função de decisão bruta do "
+    "modelo campeão. A camada de LLM só tem permissão para narrar esses valores, nunca "
+    "inventar novos."
 )
 
 shap_result = call_tool(
@@ -80,7 +81,7 @@ if shap_result["ok"]:
 
     col1, col2 = st.columns(2)
     with col1:
-        st.markdown("**Top factors increasing risk**")
+        st.markdown("**Principais fatores que aumentam o risco**")
         if not increasing.empty:
             fig = go.Figure(
                 go.Bar(
@@ -93,9 +94,9 @@ if shap_result["ok"]:
             fig.update_layout(height=320, margin=dict(l=10, r=10, t=10, b=10))
             st.plotly_chart(fig, width="stretch")
         else:
-            st.info("No risk-increasing factors identified.")
+            st.info("Nenhum fator de aumento de risco identificado.")
     with col2:
-        st.markdown("**Top factors reducing risk**")
+        st.markdown("**Principais fatores que reduzem o risco**")
         if not reducing.empty:
             fig2 = go.Figure(
                 go.Bar(
@@ -108,6 +109,6 @@ if shap_result["ok"]:
             fig2.update_layout(height=320, margin=dict(l=10, r=10, t=10, b=10))
             st.plotly_chart(fig2, width="stretch")
         else:
-            st.info("No risk-reducing factors identified.")
+            st.info("Nenhum fator de redução de risco identificado.")
 else:
     st.warning(shap_result["error"])

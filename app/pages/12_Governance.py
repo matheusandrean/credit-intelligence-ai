@@ -6,15 +6,15 @@ import streamlit as st
 
 from app.theme import PROJECT_ROOT, configure_page, demo_data_disclaimer
 
-configure_page("Governance", icon="\U0001f4dc")
-st.title("Governance")
+configure_page("Governança", icon="\U0001f4dc")
+st.title("Governança")
 demo_data_disclaimer()
 
 DOCS = {
-    "Model Card": "MODEL_CARD.md",
-    "Data Card": "DATA_CARD.md",
-    "Governance Policy": "GOVERNANCE.md",
-    "Responsible AI": "RESPONSIBLE_AI.md",
+    "Ficha do Modelo": "MODEL_CARD.md",
+    "Ficha de Dados": "DATA_CARD.md",
+    "Política de Governança": "GOVERNANCE.md",
+    "IA Responsável": "RESPONSIBLE_AI.md",
 }
 
 tabs = st.tabs(list(DOCS.keys()))
@@ -24,11 +24,14 @@ for tab, filename in zip(tabs, DOCS.values(), strict=False):
         if path.exists():
             st.markdown(path.read_text(encoding="utf-8"))
         else:
-            st.info(f"`{filename}` has not been generated yet.")
+            st.info(f"`{filename}` ainda não foi gerado.")
 
 st.markdown("---")
-st.subheader("Synthetic Credit Policy Knowledge Base")
-st.caption("Documents used by the AI Credit Analyst's retrieval-augmented generation (RAG).")
+st.subheader("Base de Conhecimento de Políticas de Crédito Sintéticas")
+st.caption(
+    "Documentos usados pela geração aumentada por recuperação (RAG) do Analista de "
+    "Crédito com IA."
+)
 kb_dir = PROJECT_ROOT / "knowledge_base"
 if kb_dir.exists():
     for md_file in sorted(kb_dir.glob("*.md")):

@@ -14,12 +14,13 @@ from app.theme import (
 )
 from src.analytics.vintage import build_vintage_curves, cohort_summary, filter_material_cohorts
 
-configure_page("Vintage Analysis", icon="\U0001f4c5")
-st.title("Vintage / MOB Analysis")
+configure_page("Análise de Safras", icon="\U0001f4c5")
+st.title("Análise de Safras (Vintage / MOB)")
 demo_data_disclaimer()
 st.caption(
-    "Bad-rate curves by origination cohort (vintage) and months-on-book (MOB), used to "
-    "separate genuine credit-quality deterioration from portfolio growth or seasoning."
+    "Curvas de taxa de inadimplência (bad rate) por safra de originação (vintage) e "
+    "meses na base (MOB), usadas para separar deterioração genuína da qualidade de "
+    "crédito de crescimento ou maturação da carteira."
 )
 
 if not require_artifacts():
@@ -28,7 +29,9 @@ if not require_artifacts():
 panel = load_monthly_performance()
 customers = load_customers_raw()
 
-min_accounts = st.slider("Minimum accounts per cohort (filters noisy legacy cohorts)", 10, 200, 30)
+min_accounts = st.slider(
+    "Mínimo de contas por safra (filtra safras antigas com ruído)", 10, 200, 30
+)
 curves = build_vintage_curves(panel, customers)
 curves = filter_material_cohorts(curves, min_accounts=min_accounts)
 
@@ -42,18 +45,18 @@ fig = px.line(
     color="origination_cohort",
     markers=True,
     labels={
-        "mob": "Months on Book",
-        "bad_rate": "Bad Rate (61+ DPD)",
-        "origination_cohort": "Cohort",
+        "mob": "Meses na Base (MOB)",
+        "bad_rate": "Taxa de Inadimplência (61+ DPD)",
+        "origination_cohort": "Safra",
     },
 )
 fig.update_layout(height=480, yaxis_tickformat=".1%")
 st.plotly_chart(fig, width="stretch")
 
 st.markdown("---")
-st.subheader("Cohort Ranking at a Fixed MOB Checkpoint")
+st.subheader("Ranking de Safras em um Ponto Fixo de MOB")
 checkpoint = st.slider(
-    "MOB checkpoint",
+    "Ponto de checagem (MOB)",
     0,
     int(curves["mob"].max()) if not curves.empty else 0,
     min(6, int(curves["mob"].max()) if not curves.empty else 0),

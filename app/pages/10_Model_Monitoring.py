@@ -14,12 +14,12 @@ from app.theme import (
 )
 from src.monitoring.drift import feature_drift_report, model_performance_over_time
 
-configure_page("Model Monitoring", icon="\U0001f4e1")
-st.title("Model Monitoring")
+configure_page("Monitoramento do Modelo", icon="\U0001f4e1")
+st.title("Monitoramento do Modelo")
 demo_data_disclaimer()
 st.caption(
-    "PSI thresholds (Stable < 0.10, Monitor 0.10-0.25, Potential significant drift > 0.25) "
-    "are demonstrative conventions - see GOVERNANCE.md."
+    "Os limites de PSI (Estável < 0,10, Monitorar 0,10-0,25, Drift significativo "
+    "potencial > 0,25) são convenções demonstrativas - veja GOVERNANCE.md."
 )
 
 if not require_artifacts():
@@ -28,7 +28,7 @@ if not require_artifacts():
 features = load_features()
 scored = load_scored_portfolio()
 
-st.subheader("Feature Drift (Train vs OOT Test)")
+st.subheader("Drift de Variáveis (Treino vs. Teste OOT)")
 train = features[features["split"] == "train"]
 test = features[features["split"] == "test"]
 candidate_features = [
@@ -42,12 +42,19 @@ candidate_features = [
 ]
 report = feature_drift_report(train, test, candidate_features)
 
+STATUS_LABELS = {
+    "Stable": "Estável",
+    "Monitor": "Monitorar",
+    "Potential significant drift": "Drift significativo potencial",
+}
+report["status"] = report["status"].map(lambda s: STATUS_LABELS.get(s, s))
+
 
 def _status_color(status: str) -> str:
     return {
-        "Stable": "#1B7A4C",
-        "Monitor": "#D6A419",
-        "Potential significant drift": "#B3261E",
+        "Estável": "#1B7A4C",
+        "Monitorar": "#D6A419",
+        "Drift significativo potencial": "#B3261E",
     }.get(status, "#999")
 
 
@@ -57,9 +64,9 @@ fig = px.bar(
     y="psi",
     color="status",
     color_discrete_map={
-        "Stable": "#1B7A4C",
-        "Monitor": "#D6A419",
-        "Potential significant drift": "#B3261E",
+        "Estável": "#1B7A4C",
+        "Monitorar": "#D6A419",
+        "Drift significativo potencial": "#B3261E",
     },
 )
 fig.update_layout(height=400)
@@ -67,19 +74,19 @@ st.plotly_chart(fig, width="stretch")
 st.dataframe(report, width="stretch")
 
 st.markdown("---")
-st.subheader("Model Performance Over Time")
+st.subheader("Performance do Modelo ao Longo do Tempo")
 perf = model_performance_over_time(scored)
 if not perf.empty:
     fig2 = px.line(perf, x="month", y="roc_auc", markers=True)
-    fig2.update_layout(height=380, yaxis_range=[0.5, 1.0], title="ROC-AUC by month")
+    fig2.update_layout(height=380, yaxis_range=[0.5, 1.0], title="ROC-AUC por mês")
     st.plotly_chart(fig2, width="stretch")
 
     fig3 = px.line(perf, x="month", y="psi_vs_first_month", markers=True)
-    fig3.add_hline(y=0.10, line_dash="dash", line_color="#D6A419", annotation_text="Monitor")
-    fig3.add_hline(y=0.25, line_dash="dash", line_color="#B3261E", annotation_text="Significant")
-    fig3.update_layout(height=380, title="Predicted PD PSI vs first available month")
+    fig3.add_hline(y=0.10, line_dash="dash", line_color="#D6A419", annotation_text="Monitorar")
+    fig3.add_hline(y=0.25, line_dash="dash", line_color="#B3261E", annotation_text="Significativo")
+    fig3.update_layout(height=380, title="PSI da PD prevista vs. primeiro mês disponível")
     st.plotly_chart(fig3, width="stretch")
 
     st.dataframe(perf, width="stretch")
 else:
-    st.info("Not enough monthly history to compute performance-over-time.")
+    st.info("Não há histórico mensal suficiente para calcular a performance ao longo do tempo.")

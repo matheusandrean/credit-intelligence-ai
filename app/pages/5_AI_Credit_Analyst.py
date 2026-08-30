@@ -8,23 +8,34 @@ from app.theme import configure_page, demo_data_disclaimer, require_artifacts
 from src.agents.credit_intelligence_agent import CreditIntelligenceAgent
 from src.utils.config import get_settings
 
-configure_page("AI Credit Analyst", icon="\U0001f916")
-st.title("AI Credit Analyst")
+configure_page("Analista de Crédito com IA", icon="\U0001f916")
+st.title("Analista de Crédito com IA")
 demo_data_disclaimer()
 
 st.markdown("""
-This assistant investigates the synthetic portfolio using typed tools (never
-raw, unrestricted access). It **never approves or denies credit** and always
-distinguishes observed data, model predictions, interpretation, and
-hypothetical simulation. See `RESPONSIBLE_AI.md`.
+Este assistente investiga a carteira sintética usando ferramentas tipadas (nunca
+acesso bruto e irrestrito). Ele **nunca aprova ou nega crédito** e sempre distingue
+dados observados, previsões do modelo, interpretação e simulação hipotética. Veja
+`RESPONSIBLE_AI.md`.
 """)
 
 if not require_artifacts():
     st.stop()
 
 settings = get_settings()
-st.caption(f"Active LLM provider: **{settings.llm_provider}**")
+st.caption(f"Provedor de LLM ativo: **{settings.llm_provider}**")
 
+DEMO_QUESTIONS_PT = [
+    "Qual o perfil de risco atual da carteira?",
+    "Quais fatores mais contribuíram para o aumento da PD?",
+    "Compare as faixas de risco A e D.",
+    "Quais segmentos mais deterioraram?",
+    "O que mostra a última análise de safras (vintage)?",
+    "Explique o perfil de risco do cliente CUST_000001.",
+    "O que acontece no cenário de estresse severo?",
+    "Quais são os principais indicadores de drift do modelo?",
+    "Resuma a carteira para um Diretor de Risco de Crédito.",
+]
 DEMO_QUESTIONS_EN = [
     "What is the current risk profile of the portfolio?",
     "Which factors are driving default risk?",
@@ -36,24 +47,14 @@ DEMO_QUESTIONS_EN = [
     "What are the main model drift indicators?",
     "Summarize the portfolio for a Credit Risk Director.",
 ]
-DEMO_QUESTIONS_PT = [
-    "Qual o perfil dos clientes de maior risco?",
-    "Quais fatores mais contribuíram para o aumento da PD?",
-    "Compare clientes das faixas A e D.",
-    "Mostre a distribuição de risco por faixa de renda.",
-    "O que aconteceria com a carteira se a renda dos clientes caísse 10%?",
-    "Explique por que este cliente está classificado como risco elevado: CUST_000001.",
-    "Quais políticas de crédito estão relacionadas a comprometimento elevado?",
-    "Gere um resumo executivo da carteira.",
-]
 
-with st.expander("Example questions (English / Português)"):
-    tab_en, tab_pt = st.tabs(["English", "Português"])
-    with tab_en:
-        for q in DEMO_QUESTIONS_EN:
-            st.markdown(f"- {q}")
+with st.expander("Perguntas de exemplo (Português / English)"):
+    tab_pt, tab_en = st.tabs(["Português", "English"])
     with tab_pt:
         for q in DEMO_QUESTIONS_PT:
+            st.markdown(f"- {q}")
+    with tab_en:
+        for q in DEMO_QUESTIONS_EN:
             st.markdown(f"- {q}")
 
 if "agent" not in st.session_state:
@@ -65,24 +66,24 @@ for message in st.session_state.chat_history:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
         if message.get("sources"):
-            st.caption("Sources: " + "; ".join(message["sources"]))
+            st.caption("Fontes: " + "; ".join(message["sources"]))
         if message.get("tools_called"):
-            st.caption("Tools called: " + ", ".join(message["tools_called"]))
+            st.caption("Ferramentas utilizadas: " + ", ".join(message["tools_called"]))
 
-question = st.chat_input("Ask about the portfolio, a customer, a simulation, or a policy...")
+question = st.chat_input("Pergunte sobre a carteira, um cliente, uma simulação ou uma política...")
 if question:
     st.session_state.chat_history.append({"role": "user", "content": question})
     with st.chat_message("user"):
         st.markdown(question)
 
     with st.chat_message("assistant"):
-        with st.spinner("Analyzing..."):
+        with st.spinner("Analisando..."):
             response = st.session_state.agent.ask(question)
         st.markdown(response.answer)
         if response.sources:
-            st.caption("Sources: " + "; ".join(response.sources))
+            st.caption("Fontes: " + "; ".join(response.sources))
         if response.tools_called:
-            st.caption("Tools called: " + ", ".join(response.tools_called))
+            st.caption("Ferramentas utilizadas: " + ", ".join(response.tools_called))
 
     st.session_state.chat_history.append(
         {
@@ -93,6 +94,6 @@ if question:
         }
     )
 
-if st.session_state.chat_history and st.button("Clear conversation"):
+if st.session_state.chat_history and st.button("Limpar conversa"):
     st.session_state.chat_history = []
     st.rerun()

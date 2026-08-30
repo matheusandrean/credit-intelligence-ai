@@ -68,16 +68,17 @@ def configure_page(title: str, icon: str = "\U0001f4ca") -> None:
 def demo_data_disclaimer() -> None:
     st.markdown(
         '<div class="disclaimer-box">'
-        "This platform runs entirely on <strong>synthetic, demonstration data</strong>. "
-        "No real customer, financial or personal information is used anywhere in this "
-        "project. Risk bands, thresholds and policies shown are illustrative only."
+        "Esta plataforma funciona inteiramente com <strong>dados sintéticos e "
+        "demonstrativos</strong>. Nenhuma informação real de clientes, financeira ou "
+        "pessoal é utilizada neste projeto. As faixas de risco, limites e políticas "
+        "exibidos são apenas ilustrativos."
         "</div>",
         unsafe_allow_html=True,
     )
 
 
 def simulation_disclaimer(
-    text: str = "This is a hypothetical simulation, not an observed outcome.",
+    text: str = "Esta é uma simulação hipotética, não um resultado observado.",
 ) -> None:
     st.markdown(f'<div class="sim-box">{text}</div>', unsafe_allow_html=True)
 
@@ -137,8 +138,9 @@ def require_artifacts() -> bool:
     if artifacts_available():
         return True
     st.warning(
-        "No trained model artifacts were found yet. Run the pipeline first:\n\n"
+        "Ainda não foram encontrados artefatos de modelo treinado. Execute o "
+        "pipeline primeiro:\n\n"
         "```bash\nmake data\nmake features\nmake train\n```\n\n"
-        "(or `.\\scripts\\tasks.ps1 data|features|train` on Windows)."
+        "(ou `.\\scripts\\tasks.ps1 data|features|train` no Windows)."
     )
     return False
