@@ -72,6 +72,35 @@ exploit details publicly) — see the repository's issue tracker.
 - `pip-audit` is run in CI on every push/PR to surface known
   vulnerabilities in the dependency tree.
 
+### Reviewed findings (as of this writing)
+
+`pip-audit` currently flags 5 known CVEs in 2 transitive dependencies.
+Both were investigated rather than blindly upgraded or ignored:
+
+- **`chromadb` 1.5.9** (GHSA-f4j7-r4q5-qw2c / CVE-2026-45829,
+  GHSA-36p7-vc44-83pf, GHSA-2wm9-hf6c-p5cr, GHSA-xph7-9rjv-w5fr) — all four
+  are pre-authentication code-injection or multi-tenant authorization
+  bypass issues in **ChromaDB's own HTTP server** (`chromadb run` /
+  `/api/v2/tenants/.../collections`, `trust_remote_code`, RBAC providers).
+  This project never starts a Chroma server: `src/rag/retriever.py` only
+  ever constructs an embedded, in-process `chromadb.PersistentClient`
+  (no network listener, no multi-tenant auth, no `trust_remote_code`).
+  1.5.9 is the latest published release, so no upgrade is currently
+  available regardless; the vulnerable attack surface (the server API) is
+  not present in how this project uses the library. **Not exploitable in
+  this deployment model.**
+- **`cryptography` 49.0.0** (PYSEC-2026-3552) — a Bleichenbacher-oracle
+  issue specifically in `pkcs7_decrypt_der`/`pkcs7_decrypt_pem`/
+  `pkcs7_decrypt_smime` (S/MIME `EnvelopedData` decryption), fixed in
+  50.0.0. This project (and its direct dependencies) never calls any
+  PKCS#7 decryption function; `cryptography` is pulled in transitively by
+  `mlflow`, which currently pins `cryptography<50`. **Not exploitable via
+  any code path this project executes**; tracked for removal once mlflow
+  relaxes that upper bound.
+
+Re-run `pip-audit` after any dependency upgrade and re-evaluate before
+assuming a finding still applies.
+
 ## GitHub Repository Security
 
 This repository is published with GitHub's default security features
