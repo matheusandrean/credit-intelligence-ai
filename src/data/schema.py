@@ -65,11 +65,7 @@ NUMERIC_COLUMNS: tuple[str, ...] = (
 DATE_COLUMNS: tuple[str, ...] = ("origination_date", "observation_date")
 
 CUSTOMER_TABLE_COLUMNS: tuple[str, ...] = (
-    (CUSTOMER_ID,)
-    + DATE_COLUMNS
-    + CATEGORICAL_COLUMNS
-    + NUMERIC_COLUMNS
-    + (TARGET,)
+    (CUSTOMER_ID,) + DATE_COLUMNS + CATEGORICAL_COLUMNS + NUMERIC_COLUMNS + (TARGET,)
 )
 
 DELINQUENCY_BUCKETS: tuple[str, ...] = ("CURRENT", "1-30", "31-60", "61-90", "90+")

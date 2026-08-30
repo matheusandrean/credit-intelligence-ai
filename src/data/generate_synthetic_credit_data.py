@@ -61,7 +61,9 @@ def load_generation_config(config_path: Path = CONFIG_PATH) -> GenerationConfig:
     )
 
 
-def _calibrate_intercept(latent_score: np.ndarray, target_rate: float, slope: float = 0.85) -> float:
+def _calibrate_intercept(
+    latent_score: np.ndarray, target_rate: float, slope: float = 0.85
+) -> float:
     """Binary-search an intercept so mean(sigmoid(intercept + slope*latent)) == target_rate."""
     lo, hi = -12.0, 4.0
     for _ in range(60):
@@ -85,9 +87,7 @@ def _zscore(x: np.ndarray) -> np.ndarray:
     return (x - x.mean()) / std
 
 
-def _inject_missing(
-    rng: np.random.Generator, series: pd.Series, missing_rate: float
-) -> pd.Series:
+def _inject_missing(rng: np.random.Generator, series: pd.Series, missing_rate: float) -> pd.Series:
     mask = rng.random(len(series)) < missing_rate
     out = series.copy()
     out[mask] = np.nan
@@ -135,9 +135,7 @@ def generate_customer_snapshot(cfg: GenerationConfig) -> pd.DataFrame:
 
     # Account tenure: mixture of new and seasoned accounts (gamma-shaped).
     account_tenure_months = np.clip(rng.gamma(shape=2.2, scale=10.0, size=n), 1, 180).round()
-    origination_date = observation_date - pd.to_timedelta(
-        account_tenure_months * 30, unit="D"
-    )
+    origination_date = observation_date - pd.to_timedelta(account_tenure_months * 30, unit="D")
     origination_date = origination_date.to_period("M").to_timestamp("M")
 
     # Portfolio deterioration narrative: a slow upward drift in the latent
@@ -146,12 +144,21 @@ def generate_customer_snapshot(cfg: GenerationConfig) -> pd.DataFrame:
     time_drift = _zscore(obs_month_idx.astype(float)) * 0.18
 
     # --- Demographics (non-protected) ---------------------------------------
-    age_band = rng.choice(
-        AGE_BANDS, size=n, p=[0.14, 0.24, 0.24, 0.19, 0.13, 0.06]
+    age_band = rng.choice(AGE_BANDS, size=n, p=[0.14, 0.24, 0.24, 0.19, 0.13, 0.06])
+    age_band_risk = (
+        pd.Series(age_band)
+        .map(
+            {
+                "18-24": 0.35,
+                "25-34": 0.15,
+                "35-44": 0.0,
+                "45-54": -0.05,
+                "55-64": -0.1,
+                "65+": -0.05,
+            }
+        )
+        .to_numpy()
     )
-    age_band_risk = pd.Series(age_band).map(
-        {"18-24": 0.35, "25-34": 0.15, "35-44": 0.0, "45-54": -0.05, "55-64": -0.1, "65+": -0.05}
-    ).to_numpy()
 
     employment_tenure_months = np.clip(rng.gamma(shape=2.0, scale=24.0, size=n), 0, 480)
 
@@ -175,12 +182,13 @@ def generate_customer_snapshot(cfg: GenerationConfig) -> pd.DataFrame:
         monthly_income * rng.uniform(1.5, 4.5, size=n) * (1 - 0.15 * (discipline < -1)), 300, 200000
     )
 
-    base_utilization = np.clip(
-        0.45 - 0.15 * discipline + rng.normal(0, 0.18, size=n), 0.0, 1.4
-    )
+    base_utilization = np.clip(0.45 - 0.15 * discipline + rng.normal(0, 0.18, size=n), 0.0, 1.4)
     revolving_balance = credit_limit * base_utilization
     credit_utilization = np.divide(
-        revolving_balance, credit_limit, out=np.zeros_like(revolving_balance), where=credit_limit > 0
+        revolving_balance,
+        credit_limit,
+        out=np.zeros_like(revolving_balance),
+        where=credit_limit > 0,
     )
 
     # --- Delinquency history ---------------------------------------------------
@@ -196,9 +204,7 @@ def generate_customer_snapshot(cfg: GenerationConfig) -> pd.DataFrame:
 
     late_lambda_12m = np.clip(0.15 + 3.5 * np.clip(risk_percentile - 0.5, 0, None) * 2, 0.02, 6)
     late_payments_12m = rng.poisson(lam=late_lambda_12m)
-    late_payments_6m = np.minimum(
-        late_payments_12m, rng.binomial(late_payments_12m, 0.65)
-    )
+    late_payments_6m = np.minimum(late_payments_12m, rng.binomial(late_payments_12m, 0.65))
     late_payments_3m = np.minimum(late_payments_6m, rng.binomial(late_payments_6m, 0.55))
 
     max_days_past_due = np.where(
@@ -207,9 +213,9 @@ def generate_customer_snapshot(cfg: GenerationConfig) -> pd.DataFrame:
         np.clip(rng.gamma(shape=1.3, scale=18 + 25 * risk_percentile, size=n), 0, 240),
     ).round()
 
-    previous_default_flag = (rng.random(n) < np.clip(0.03 + 0.22 * risk_percentile**2, 0, 0.6)).astype(
-        int
-    )
+    previous_default_flag = (
+        rng.random(n) < np.clip(0.03 + 0.22 * risk_percentile**2, 0, 0.6)
+    ).astype(int)
 
     payment_history_score = np.clip(1 - risk_percentile + rng.normal(0, 0.12, size=n), 0, 1)
     payment_history = pd.cut(
@@ -238,14 +244,9 @@ def generate_customer_snapshot(cfg: GenerationConfig) -> pd.DataFrame:
         rng.poisson(lam=np.clip(0.5 + 3.0 * risk_percentile, 0.1, None)), 0, 15
     )
 
-    behavioral_score = np.clip(
-        100 * (1 - risk_percentile) + rng.normal(0, 6, size=n), 0, 100
-    )
+    behavioral_score = np.clip(100 * (1 - risk_percentile) + rng.normal(0, 6, size=n), 0, 100)
     financial_stability_index = np.clip(
-        0.5
-        + 0.3 * discipline
-        - 0.2 * _zscore(debt_to_income)
-        + rng.normal(0, 0.1, size=n),
+        0.5 + 0.3 * discipline - 0.2 * _zscore(debt_to_income) + rng.normal(0, 0.1, size=n),
         0,
         1,
     )
@@ -256,12 +257,8 @@ def generate_customer_snapshot(cfg: GenerationConfig) -> pd.DataFrame:
     balance_trend = np.clip(
         0.10 * risk_percentile - 0.05 * discipline + rng.normal(0, 0.08, size=n), -0.5, 1.0
     )
-    utilization_trend = np.clip(
-        0.08 * risk_percentile + rng.normal(0, 0.06, size=n), -0.4, 0.8
-    )
-    delinquency_trend = np.clip(
-        0.12 * risk_percentile + rng.normal(0, 0.07, size=n), -0.4, 1.0
-    )
+    utilization_trend = np.clip(0.08 * risk_percentile + rng.normal(0, 0.06, size=n), -0.4, 0.8)
+    delinquency_trend = np.clip(0.12 * risk_percentile + rng.normal(0, 0.07, size=n), -0.4, 1.0)
 
     # --- Target: probability of 90+ day default within the next 90 days --------
     latent_score = (
@@ -371,7 +368,6 @@ def generate_monthly_performance_panel(
     decile = decile.fillna(decile.median()).astype(int).to_numpy()
 
     n_states = len(DELINQUENCY_BUCKETS)
-    state_idx = {b: i for i, b in enumerate(DELINQUENCY_BUCKETS)}
 
     # Build one transition matrix per decile (0=safest .. 9=riskiest).
     transition_matrices = []
@@ -424,9 +420,7 @@ def generate_monthly_performance_panel(
                     current_state[s_sel] = draws
 
         dpd_map = np.array([0, 15, 45, 75, 120])
-        snapshot_month = (
-            pd.Series(origination[idx]).dt.to_period("M") + mob
-        ).dt.to_timestamp("M")
+        snapshot_month = (pd.Series(origination[idx]).dt.to_period("M") + mob).dt.to_timestamp("M")
         util_noise = rng.normal(0, 0.03, size=len(idx))
         state_now = current_state[idx]
         bucket_util_bump = state_now * 0.05
