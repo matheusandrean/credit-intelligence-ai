@@ -190,7 +190,7 @@ def main() -> None:
                 {
                     f"{split_name}_{k}": v
                     for k, v in m.to_dict().items()
-                    if isinstance(v, (int, float))
+                    if isinstance(v, int | float)
                 }
             )
         mlflow.sklearn.log_model(lr_pipeline, name="model", serialization_format="pickle")
@@ -220,7 +220,7 @@ def main() -> None:
                 {
                     f"{split_name}_{k}": v
                     for k, v in m.to_dict().items()
-                    if isinstance(v, (int, float))
+                    if isinstance(v, int | float)
                 }
             )
         mlflow.lightgbm.log_model(lgb_model, name="model")

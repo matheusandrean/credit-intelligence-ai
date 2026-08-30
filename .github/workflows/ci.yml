@@ -35,19 +35,13 @@ jobs:
       - name: Type check (mypy)
         run: mypy src api || true # non-blocking during early-stage typing rollout
 
-      - name: Secret scan (detect-secrets)
+      - name: Secret scan (detect-secrets vs baseline)
         run: |
-          detect-secrets scan --all-files > /tmp/secrets-scan.json
-          python -c "
-          import json
-          with open('/tmp/secrets-scan.json') as f:
-              data = json.load(f)
-          leaks = {k: v for k, v in data.get('results', {}).items() if v}
-          if leaks:
-              print('Potential secrets detected:', leaks)
-              raise SystemExit(1)
-          print('No secrets detected.')
-          "
+          # Fails only on secrets NOT already reviewed in .secrets.baseline
+          # (that baseline's existing entries are false positives - notebook
+          # base64 chart images and a documentation string listing patterns
+          # to search for - see SECURITY.md).
+          detect-secrets-hook --baseline .secrets.baseline $(git ls-files)
 
       - name: Dependency vulnerability scan (pip-audit)
         run: pip-audit --skip-editable || true # advisory, non-blocking

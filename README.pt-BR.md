@@ -4,7 +4,7 @@
 
 Português | [English](README.md)
 
-![CI](https://github.com/matheusmarcondes/credit-intelligence-ai/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/matheusandrean/credit-intelligence-ai/actions/workflows/ci.yml/badge.svg)
 ![Python](https://img.shields.io/badge/python-3.12-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Tests](https://img.shields.io/badge/tests-153%20passing-brightgreen)
@@ -44,7 +44,7 @@ nunca inventando um número, e nunca emitindo uma decisão de crédito.
 **Demo em menos de 5 minutos, sem precisar de API key:**
 
 ```bash
-git clone https://github.com/matheusmarcondes/credit-intelligence-ai.git
+git clone https://github.com/matheusandrean/credit-intelligence-ai.git
 cd credit-intelligence-ai
 make install
 make data && make features && make train
@@ -266,7 +266,7 @@ aprova, nega ou sobrescreve uma decisão de crédito. Toda afirmação da LLM
 ### Instalação local
 
 ```bash
-git clone https://github.com/matheusmarcondes/credit-intelligence-ai.git
+git clone https://github.com/matheusandrean/credit-intelligence-ai.git
 cd credit-intelligence-ai
 cp .env.example .env          # padrão LLM_PROVIDER=demo, sem necessidade de key
 

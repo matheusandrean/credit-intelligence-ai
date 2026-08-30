@@ -157,7 +157,7 @@ class ShapExplainer:
 
 
 def _safe_scalar(value: Any) -> Any:
-    if isinstance(value, (np.floating, np.integer)):
+    if isinstance(value, np.floating | np.integer):
         return value.item()
     return value
 

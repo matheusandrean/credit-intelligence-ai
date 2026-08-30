@@ -12,12 +12,14 @@ configure_page("AI Credit Analyst", icon="\U0001f916")
 st.title("AI Credit Analyst")
 demo_data_disclaimer()
 
-st.markdown("""
+st.markdown(
+    """
 This assistant investigates the synthetic portfolio using typed tools (never
 raw, unrestricted access). It **never approves or denies credit** and always
 distinguishes observed data, model predictions, interpretation, and
 hypothetical simulation. See `RESPONSIBLE_AI.md`.
-""")
+"""
+)
 
 if not require_artifacts():
     st.stop()

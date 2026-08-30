@@ -75,4 +75,3 @@ erDiagram
 See `sql/*.sql` for report queries against this model, and
 `src/analytics/run_sql_reports.py` for the runner that executes them
 against real data and writes `reports/sql/*.csv`.
-

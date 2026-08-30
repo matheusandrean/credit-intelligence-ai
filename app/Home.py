@@ -17,7 +17,8 @@ st.caption(
 
 demo_data_disclaimer()
 
-st.markdown("""
+st.markdown(
+    """
 ### What this platform does
 
 Credit Intelligence AI combines a **quantitative credit risk model** (Logistic
@@ -41,7 +42,8 @@ Use the navigation on the left to explore:
 | Model Monitoring | PSI drift for features and predicted PD over time |
 | Data Quality | Automated validation report |
 | Governance | Model, data and responsible-AI documentation |
-""")
+"""
+)
 
 if require_artifacts():
     metadata = load_model_metadata()
@@ -52,7 +54,8 @@ if require_artifacts():
     col3.metric("LLM provider (this session)", settings.llm_provider)
 
 st.markdown("---")
-st.markdown("""
+st.markdown(
+    """
 ### Human-in-the-loop, by design
 
 No component of this platform - quantitative model or generative-AI agent -
@@ -63,7 +66,8 @@ full policy.
 **Disclaimer:** this is a portfolio/educational project built entirely on
 synthetic data. It must not be used for real credit decisions without
 independent validation, governance, compliance and legal review.
-""")
+"""
+)
 
 st.markdown("---")
 st.caption("Credit Intelligence AI - built by Matheus Marcondes.")

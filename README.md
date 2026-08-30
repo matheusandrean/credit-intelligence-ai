@@ -4,7 +4,7 @@
 
 [Português](README.pt-BR.md) | English
 
-![CI](https://github.com/matheusmarcondes/credit-intelligence-ai/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/matheusandrean/credit-intelligence-ai/actions/workflows/ci.yml/badge.svg)
 ![Python](https://img.shields.io/badge/python-3.12-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Tests](https://img.shields.io/badge/tests-153%20passing-brightgreen)
@@ -44,7 +44,7 @@ output, never fabricating a number, and never issuing a credit decision.
 **Demo in under 5 minutes, no API key required:**
 
 ```bash
-git clone https://github.com/matheusmarcondes/credit-intelligence-ai.git
+git clone https://github.com/matheusandrean/credit-intelligence-ai.git
 cd credit-intelligence-ai
 make install
 make data && make features && make train
@@ -266,7 +266,7 @@ Full detail: [`RESPONSIBLE_AI.md`](RESPONSIBLE_AI.md).
 ### Local install
 
 ```bash
-git clone https://github.com/matheusmarcondes/credit-intelligence-ai.git
+git clone https://github.com/matheusandrean/credit-intelligence-ai.git
 cd credit-intelligence-ai
 cp .env.example .env          # defaults to LLM_PROVIDER=demo, no key needed
 

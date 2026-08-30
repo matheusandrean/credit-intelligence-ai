@@ -34,7 +34,8 @@ exploit details publicly) — see the repository's issue tracker.
 - Before the first push and before every subsequent significant push, the
   diff is manually inspected for secret-shaped strings
   (`api_key`, `token`, `password`, `sk-`, `ghp_`, `github_pat_`, `AKIA`,
-  `BEGIN PRIVATE KEY`) in addition to the automated scanners.
+  PEM private-key header/footer markers) in addition to the automated
+  scanners.
 
 ## Application-Level Data Boundaries
 
