@@ -34,6 +34,8 @@ CUSTOM_CSS = f"""
     .stApp {{ background-color: {SURFACE}; }}
     h1, h2, h3 {{ color: {INK}; font-weight: 650; }}
     p, li, span, label {{ color: {INK}; }}
+    [data-testid="stSidebar"] {{ background-color: {INK}; }}
+    [data-testid="stSidebar"] * {{ color: {SURFACE}; }}
     [data-testid="stMetricValue"] {{ color: {PRIMARY}; font-weight: 700; }}
     [data-testid="stMetricLabel"] {{ color: {MUTED}; }}
     .disclaimer-box {{
