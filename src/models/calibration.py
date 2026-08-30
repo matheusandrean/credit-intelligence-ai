@@ -55,18 +55,27 @@ def calibrate_champion() -> dict:
     raw_test_prob = predict(champion_model, x_test)
     raw_brier_test = float(brier_score_loss(y_test, raw_test_prob))
 
-    best_method = None
-    best_model = None
-    best_val_brier = float("inf")
+    candidates: dict[str, tuple[float, object]] = {}
     for method in ["sigmoid", "isotonic"]:
         calibrated = CalibratedClassifierCV(FrozenEstimator(champion_model), method=method)
         calibrated.fit(x_val, y_val)
         val_brier = float(brier_score_loss(y_val, predict(calibrated, x_val)))
         logger.info("calibration_candidate", method=method, val_brier=val_brier)
-        if val_brier < best_val_brier:
-            best_val_brier = val_brier
-            best_method = method
-            best_model = calibrated
+        candidates[method] = (val_brier, calibrated)
+
+    # Prefer Platt/sigmoid scaling by default: it is a smooth, strictly
+    # monotonic transform, which matters for this platform's what-if and
+    # stress-testing tools (a small input change should always be able to
+    # move the PD). Isotonic regression is a step function and can produce
+    # flat plateaus - especially in the sparse low-probability tail - that
+    # silently absorb small input changes. We only switch to isotonic when
+    # it improves validation Brier score by a material margin (>5% relative),
+    # since a plateau is an acceptable trade-off for a genuinely better-
+    # calibrated model, documented in MODEL_CARD.md.
+    sigmoid_brier, _ = candidates["sigmoid"]
+    isotonic_brier, _ = candidates["isotonic"]
+    best_method = "isotonic" if isotonic_brier < sigmoid_brier * 0.95 else "sigmoid"
+    best_model = candidates[best_method][1]
 
     calibrated_test_prob = predict(best_model, x_test)
     calibrated_brier_test = float(brier_score_loss(y_test, calibrated_test_prob))
