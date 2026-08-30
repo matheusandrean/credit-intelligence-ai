@@ -9,7 +9,7 @@
 #>
 param(
     [Parameter(Position = 0, Mandatory = $true)]
-    [ValidateSet("install", "data", "validate", "features", "train", "test", "api", "app", "lint", "format", "typecheck", "security", "docker", "docker-up", "mlflow-ui", "clean")]
+    [ValidateSet("install", "data", "validate", "features", "train", "test", "eval", "sql-reports", "api", "app", "lint", "format", "typecheck", "security", "docker", "docker-up", "mlflow-ui", "clean")]
     [string]$Task
 )
 
@@ -28,6 +28,8 @@ switch ($Task) {
     "features" { & $PY -m src.features.build_features }
     "train" { & $PY -m src.models.train }
     "test" { & $PY -m pytest --cov=src --cov=api --cov-report=term-missing }
+    "eval" { & $PY -m src.evaluation.run_golden_eval }
+    "sql-reports" { & $PY -m src.analytics.run_sql_reports }
     "api" { & $PY -m uvicorn api.main:app --reload --host 0.0.0.0 --port 8000 }
     "app" { & $PY -m streamlit run app/Home.py }
     "lint" {
