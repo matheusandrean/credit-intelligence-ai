@@ -1,0 +1,94 @@
+"""Model Performance: discrimination, calibration and lift for the champion model."""
+
+from __future__ import annotations
+
+import plotly.graph_objects as go
+import streamlit as st
+
+from app.theme import (
+    configure_page,
+    demo_data_disclaimer,
+    load_json_report,
+    load_model_metadata,
+    require_artifacts,
+)
+
+configure_page("Model Performance", icon="\U0001f3c6")
+st.title("Model Performance")
+demo_data_disclaimer()
+
+if not require_artifacts():
+    st.stop()
+
+metadata = load_model_metadata()
+comparison = load_json_report("model_comparison.json")
+calibration = load_json_report("calibration_report.json")
+
+st.markdown(
+    f"**Champion model:** `{metadata.get('champion_model')}` | **Calibration:** `{metadata.get('calibration_method', 'n/a')}`"
+)
+
+if comparison:
+    st.subheader("Champion vs Challenger — Out-of-Time Test Metrics")
+    rows = []
+    for model_name, splits in comparison.items():
+        test_metrics = splits.get("test", {})
+        rows.append(
+            {
+                "model": model_name,
+                "roc_auc": test_metrics.get("roc_auc"),
+                "ks_statistic": test_metrics.get("ks_statistic"),
+                "gini": test_metrics.get("gini"),
+                "brier_score": test_metrics.get("brier_score"),
+                "lift_at_top_decile": test_metrics.get("lift_at_top_decile"),
+                "recall_at_top_decile": test_metrics.get("recall_at_top_decile"),
+            }
+        )
+    import pandas as pd
+
+    df = pd.DataFrame(rows).set_index("model")
+    st.dataframe(df.style.format("{:.4f}"), width="stretch")
+
+    fig = go.Figure(go.Bar(x=df.index, y=df["roc_auc"], marker_color=["#0B3D91", "#94A3B8"]))
+    fig.update_layout(title="ROC-AUC (OOT test)", height=350, yaxis_range=[0.5, 1.0])
+    st.plotly_chart(fig, width="stretch")
+else:
+    st.warning("No model comparison report found. Run `make train` first.")
+
+st.markdown("---")
+st.subheader("Calibration: Reliability Curve")
+if calibration:
+    c1, c2 = st.columns(2)
+    c1.metric("Raw Brier score (test)", f"{calibration['raw_brier_test']:.4f}")
+    c2.metric("Calibrated Brier score (test)", f"{calibration['calibrated_brier_test']:.4f}")
+
+    fig2 = go.Figure()
+    fig2.add_trace(
+        go.Scatter(
+            x=[0, 1],
+            y=[0, 1],
+            mode="lines",
+            name="Perfect calibration",
+            line=dict(dash="dash", color="gray"),
+        )
+    )
+    raw = calibration["reliability_raw_test"]
+    cal = calibration["reliability_calibrated_test"]
+    fig2.add_trace(
+        go.Scatter(
+            x=raw["mean_predicted"], y=raw["mean_observed"], mode="lines+markers", name="Raw"
+        )
+    )
+    fig2.add_trace(
+        go.Scatter(
+            x=cal["mean_predicted"], y=cal["mean_observed"], mode="lines+markers", name="Calibrated"
+        )
+    )
+    fig2.update_layout(
+        height=450,
+        xaxis_title="Mean predicted PD",
+        yaxis_title="Mean observed default rate",
+    )
+    st.plotly_chart(fig2, width="stretch")
+else:
+    st.warning("No calibration report found. Run `make train` then the calibration step.")
