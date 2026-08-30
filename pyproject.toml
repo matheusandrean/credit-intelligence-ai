@@ -67,6 +67,11 @@ exclude = ["notebooks", ".venv", "mlruns"]
 select = ["E", "F", "I", "UP", "B", "SIM", "N"]
 ignore = ["E501"]
 
+[tool.ruff.lint.per-file-ignores]
+# FastAPI's dependency-injection pattern relies on calling Depends() as a
+# default argument value; this is idiomatic, not the bug B008 usually flags.
+"api/**/*.py" = ["B008"]
+
 [tool.black]
 line-length = 100
 target-version = ["py312"]
