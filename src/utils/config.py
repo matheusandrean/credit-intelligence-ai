@@ -49,7 +49,7 @@ class Settings(BaseSettings):
     vector_store_dir: str = "data/processed/chroma_db"
 
     # MLflow
-    mlflow_tracking_uri: str = "file:./mlruns"
+    mlflow_tracking_uri: str = "sqlite:///mlflow.db"
 
     @property
     def data_path(self) -> Path:

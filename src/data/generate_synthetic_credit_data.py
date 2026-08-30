@@ -270,7 +270,10 @@ def generate_customer_snapshot(cfg: GenerationConfig) -> pd.DataFrame:
         + 0.5 * _zscore(balance_trend)
         + 0.4 * _zscore(delinquency_trend)
         - 0.5 * _zscore(financial_stability_index)
-        + rng.normal(0, 1.0, size=n)  # irreducible noise
+        + rng.normal(0, 5.2, size=n)  # irreducible noise, calibrated so the
+        # resulting model AUC lands in a realistic ~0.75-0.85 band rather
+        # than an implausibly perfect score (real behavior-score models
+        # rarely exceed ~0.80-0.85 OOT AUC).
     )
     # Calibrate intercept so the overall default rate matches the configured
     # realistic target (default ~7.5%) regardless of upstream distributional

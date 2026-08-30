@@ -28,6 +28,7 @@ coverage.xml
 # --- MLflow ---
 mlruns/
 mlartifacts/
+mlflow.db
 
 # --- Data & models (generated, not committed) ---
 data/raw/*
