@@ -1,0 +1,52 @@
+services:
+  pipeline:
+    build:
+      context: .
+      target: base
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models
+      - ./reports:/app/reports
+      - ./mlruns:/app/mlruns
+    command: >
+      sh -c "python -m src.data.generate_synthetic_credit_data &&
+             python -m src.features.build_features &&
+             python -m src.models.train"
+
+  api:
+    build:
+      context: .
+      target: api
+    env_file:
+      - .env
+    environment:
+      - LLM_PROVIDER=${LLM_PROVIDER:-demo}
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models
+      - ./mlruns:/app/mlruns
+    depends_on:
+      pipeline:
+        condition: service_completed_successfully
+
+  app:
+    build:
+      context: .
+      target: app
+    env_file:
+      - .env
+    environment:
+      - LLM_PROVIDER=${LLM_PROVIDER:-demo}
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models
+      - ./mlruns:/app/mlruns
+    depends_on:
+      pipeline:
+        condition: service_completed_successfully

@@ -1,0 +1,68 @@
+# --- Secrets & environment ---
+.env
+.env.*
+!.env.example
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+env/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# --- Jupyter ---
+.ipynb_checkpoints/
+
+# --- MLflow ---
+mlruns/
+mlartifacts/
+
+# --- Data & models (generated, not committed) ---
+data/raw/*
+data/processed/*
+data/synthetic/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/synthetic/.gitkeep
+models/*
+!models/.gitkeep
+reports/*
+!reports/.gitkeep
+
+# --- Vector store / RAG index ---
+chroma_db/
+*.chroma
+
+# --- Docker ---
+*.pid
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+
+# --- IDE ---
+.vscode/
+.idea/
+
+# --- Secrets safety net ---
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.*
+secrets.*
+*.crt
+
+scripts/*.log

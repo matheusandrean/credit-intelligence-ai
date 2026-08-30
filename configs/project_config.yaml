@@ -1,0 +1,90 @@
+# Central, non-secret configuration for Credit Intelligence AI.
+# Business/model constants live here instead of being scattered as magic
+# numbers across the codebase.
+
+data:
+  n_customers: 100000
+  random_seed: 42
+  start_date: "2023-01-01"
+  end_date: "2025-06-30"
+
+temporal_split:
+  train_start: "2023-01-01"
+  train_end: "2024-06-30"
+  validation_start: "2024-07-01"
+  validation_end: "2024-12-31"
+  test_start: "2025-01-01"
+  test_end: "2025-06-30"
+
+target:
+  name: target_default_90d
+  horizon_days: 90
+  target_portfolio_default_rate: 0.075
+
+score:
+  min_score: 300
+  max_score: 900
+  # Points-to-double-odds style scaling anchored at a reference PD/score pair
+  reference_pd: 0.08
+  reference_score: 660
+  pdo: 40 # points to double the odds
+
+risk_bands:
+  # Upper bound (inclusive) of score for each band, evaluated in order
+  - band: A
+    min_score: 780
+    max_score: 900
+    description: "Very low risk - demonstrative band only"
+  - band: B
+    min_score: 700
+    max_score: 779
+    description: "Low risk - demonstrative band only"
+  - band: C
+    min_score: 620
+    max_score: 699
+    description: "Medium risk - demonstrative band only"
+  - band: D
+    min_score: 540
+    max_score: 619
+    description: "High risk - demonstrative band only"
+  - band: E
+    min_score: 300
+    max_score: 539
+    description: "Very high risk - demonstrative band only"
+
+expected_loss:
+  # Synthetic LGD assumption for unsecured revolving-style credit lines.
+  base_lgd: 0.65
+  lgd_noise_std: 0.05
+
+drift:
+  psi_stable_threshold: 0.10
+  psi_monitor_threshold: 0.25
+
+delinquency_buckets:
+  - CURRENT
+  - "1-30"
+  - "31-60"
+  - "61-90"
+  - "90+"
+
+stress_scenarios:
+  baseline:
+    income_shock_pct: 0.0
+    expense_shock_pct: 0.0
+    utilization_shock_pp: 0.0
+  mild:
+    income_shock_pct: -0.05
+    expense_shock_pct: 0.05
+    utilization_shock_pp: 0.0
+  moderate:
+    income_shock_pct: -0.10
+    expense_shock_pct: 0.10
+    utilization_shock_pp: 5.0
+  severe:
+    income_shock_pct: -0.20
+    expense_shock_pct: 0.15
+    utilization_shock_pp: 10.0
+
+mlflow:
+  experiment_name: credit-intelligence-ai

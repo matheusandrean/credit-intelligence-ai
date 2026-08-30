@@ -1,0 +1,90 @@
+[project]
+name = "credit-intelligence-ai"
+version = "0.1.0"
+description = "Credit Intelligence AI - a hybrid Credit Risk + Explainable AI + Generative AI decision-support platform"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Matheus Marcondes" }]
+
+dependencies = [
+    "pandas>=2.2",
+    "numpy>=1.26",
+    "pyarrow>=16.0",
+    "duckdb>=1.0",
+    "pandera>=0.20",
+    "scikit-learn>=1.5",
+    "lightgbm>=4.3",
+    "shap>=0.46",
+    "mlflow>=2.14",
+    "fastapi>=0.111",
+    "uvicorn[standard]>=0.30",
+    "streamlit>=1.37",
+    "plotly>=5.22",
+    "pydantic>=2.7",
+    "pydantic-settings>=2.3",
+    "python-dotenv>=1.0",
+    "chromadb>=0.5",
+    "langgraph>=0.1.19",
+    "langchain-core>=0.2.30",
+    "anthropic>=0.30",
+    "openai>=1.35",
+    "httpx>=0.27",
+    "structlog>=24.1",
+    "scipy>=1.13",
+    "joblib>=1.4",
+    "tenacity>=8.5",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.2",
+    "pytest-cov>=5.0",
+    "pytest-mock>=3.14",
+    "ruff>=0.5",
+    "black>=24.4",
+    "mypy>=1.10",
+    "pre-commit>=3.7",
+    "pandas-stubs",
+    "jupyter>=1.0",
+    "notebook>=7.2",
+    "detect-secrets>=1.5",
+    "pip-audit>=2.7",
+]
+
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*", "api*", "app*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+exclude = ["notebooks", ".venv", "mlruns"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "N"]
+ignore = ["E501"]
+
+[tool.black]
+line-length = 100
+target-version = ["py312"]
+
+[tool.mypy]
+python_version = "3.12"
+ignore_missing_imports = true
+disallow_untyped_defs = false
+warn_unused_ignores = true
+exclude = ["notebooks", ".venv"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra -q"
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[tool.coverage.run]
+source = ["src", "api", "app"]
+omit = ["*/tests/*"]
