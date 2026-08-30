@@ -103,3 +103,12 @@ fig3 = go.Figure(
 )
 fig3.update_layout(height=350, margin=dict(l=10, r=10, t=20, b=10))
 st.plotly_chart(fig3, width="stretch")
+
+st.markdown("---")
+st.subheader("Executive Report")
+if st.button("Generate Portfolio Executive Report"):
+    from src.reporting.executive_report import generate_executive_report
+
+    with st.spinner("Generating report..."):
+        report = generate_executive_report()
+    st.markdown(report)

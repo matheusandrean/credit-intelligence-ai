@@ -23,6 +23,7 @@ from src.llm.schemas import (
     CompareSegmentsInput,
     CustomerRiskProfileInput,
     DetectDriftInput,
+    GenerateExecutiveReportInput,
     GetCustomerShapInput,
     GetFeatureImportanceInput,
     GetModelMetricsInput,
@@ -48,6 +49,7 @@ from src.llm.tools.portfolio_tools import (
     tool_portfolio_summary,
     tool_query_portfolio,
 )
+from src.llm.tools.reporting_tools import tool_generate_executive_report
 from src.llm.tools.simulation_tools import tool_run_stress_test, tool_run_what_if
 from src.utils.logging import get_logger
 
@@ -156,6 +158,14 @@ TOOL_REGISTRY: dict[str, ToolSpec] = {
             "calibration method) for the champion model on the out-of-time test set.",
             GetModelMetricsInput,
             tool_get_model_metrics,
+        ),
+        ToolSpec(
+            "generate_executive_report",
+            "Generate a full Portfolio Executive Report (overview, risk movement, main "
+            "drivers, deterioration signals, stress testing, model health, and points "
+            "requiring human attention), built entirely from other tool outputs.",
+            GenerateExecutiveReportInput,
+            tool_generate_executive_report,
         ),
     ]
 }

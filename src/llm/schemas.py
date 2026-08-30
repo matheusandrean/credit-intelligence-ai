@@ -86,6 +86,10 @@ class GetModelMetricsInput(BaseModel):
     pass
 
 
+class GenerateExecutiveReportInput(BaseModel):
+    pass
+
+
 # --- Output models ---------------------------------------------------------
 
 

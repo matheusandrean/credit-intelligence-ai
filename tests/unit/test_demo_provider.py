@@ -76,6 +76,14 @@ def test_routes_model_metrics() -> None:
     assert _classify("What is the model's AUC and KS?") == "get_model_metrics"
 
 
+def test_routes_executive_report() -> None:
+    assert (
+        _classify("Summarize the portfolio for a Credit Risk Director.")
+        == "generate_executive_report"
+    )
+    assert _classify("Gere um resumo executivo da carteira.") == "generate_executive_report"
+
+
 def test_demo_disclaimer_present_in_final_answer() -> None:
     from src.llm.providers.base import ToolResultMessage
     from src.llm.providers.demo_provider import DEMO_DISCLAIMER

@@ -61,6 +61,18 @@ class DemoProvider(BaseLLMProvider):
         customer_match = _CUSTOMER_ID_RE.search(question)
         customer_id = customer_match.group(0).upper() if customer_match else None
 
+        if any(
+            k in q
+            for k in [
+                "executive report",
+                "executive summary",
+                "summarize the portfolio",
+                "resumo executivo",
+                "gere um resumo",
+            ]
+        ):
+            return "generate_executive_report", {}
+
         if any(k in q for k in ["policy", "política", "politica", "policies"]):
             return "retrieve_credit_policy", {"question": question}
 
@@ -141,6 +153,8 @@ class DemoProvider(BaseLLMProvider):
         if not content.get("ok", True):
             return f"Tool `{tool_name}` could not produce evidence: {content.get('error')}"
         data = content.get("data", {})
+        if tool_name == "generate_executive_report" and "report_markdown" in data:
+            return data["report_markdown"]
         return f"Tool called: `{tool_name}`\nResult:\n{_format_data(data)}"
 
 
