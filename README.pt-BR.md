@@ -11,8 +11,7 @@ Português | [English](README.md)
 ![Coverage](https://img.shields.io/badge/coverage-84%25-brightgreen)
 
 ---
-
-## Para Recrutadores (60 segundos)
+*Resumo*
 
 **Problema de negócio.** Monitorar risco de crédito exige combinar dados
 comportamentais, modelos quantitativos e políticas — a maioria dos
