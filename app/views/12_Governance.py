@@ -11,10 +11,10 @@ st.title("Governança")
 demo_data_disclaimer()
 
 DOCS = {
-    "Ficha do Modelo": "MODEL_CARD.md",
-    "Ficha de Dados": "DATA_CARD.md",
-    "Política de Governança": "GOVERNANCE.md",
-    "IA Responsável": "RESPONSIBLE_AI.md",
+    "Ficha do Modelo": "MODEL_CARD.pt-BR.md",
+    "Ficha de Dados": "DATA_CARD.pt-BR.md",
+    "Política de Governança": "GOVERNANCE.pt-BR.md",
+    "IA Responsável": "RESPONSIBLE_AI.pt-BR.md",
 }
 
 tabs = st.tabs(list(DOCS.keys()))

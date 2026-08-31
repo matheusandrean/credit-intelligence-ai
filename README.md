@@ -182,7 +182,7 @@ Every PD is explainable — top-5 risk-increasing and top-5 risk-reducing
 factors, with real observed values (not scaled/encoded internals). Global
 top drivers on the last run: `debt_to_income`, `behavioral_score`,
 `late_payments_12m`, `utilization_gap_to_limit`, `financial_stability_index`.
-See `app/pages/4_Customer_360.py` and `app/pages/9_Model_Performance.py`.
+See `app/views/4_Customer_360.py` and `app/views/9_Model_Performance.py`.
 
 ## GenAI Architecture
 
@@ -221,7 +221,7 @@ Qual política trata clientes com comprometimento elevado?
 Gere um resumo executivo da carteira.
 ```
 
-More in `app/pages/5_AI_Credit_Analyst.py` and
+More in `app/views/5_AI_Credit_Analyst.py` and
 `evaluation/credit_questions.json` (the golden evaluation set — 15/15
 tool-selection accuracy, see [`docs/LLM_EVALUATION.md`](docs/LLM_EVALUATION.md)).
 
@@ -230,7 +230,7 @@ tool-selection accuracy, see [`docs/LLM_EVALUATION.md`](docs/LLM_EVALUATION.md))
 4 scenarios (Baseline/Mild/Moderate/Severe), sharing one shock mechanic
 with the single-customer what-if tool. Last run: severe scenario moves
 average PD from 7.46% to 10.27% (+2.81pp) — see
-`reports/stress_test_report.json` and `app/pages/6_Portfolio_Stress_Testing.py`.
+`reports/stress_test_report.json` and `app/views/6_Portfolio_Stress_Testing.py`.
 
 ## Monitoring
 
@@ -238,7 +238,7 @@ Population Stability Index (PSI) on both input features and the predicted
 PD distribution over time, with Stable/Monitor/Significant-drift
 thresholds (demonstrative — see [`GOVERNANCE.md`](GOVERNANCE.md)). Vintage
 and roll-rate analysis localize deterioration signals to specific cohorts
-or delinquency transitions. See `app/pages/10_Model_Monitoring.py`.
+or delinquency transitions. See `app/views/10_Model_Monitoring.py`.
 
 ## Governance
 

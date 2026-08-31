@@ -72,9 +72,10 @@ ignore = ["E501"]
 # default argument value; this is idiomatic, not the bug B008 usually flags.
 "api/**/*.py" = ["B008"]
 # Streamlit's multipage-app convention names the entry point `Home.py` and
-# pages `<order>_Title_Case.py` so the sidebar nav renders correctly.
+# pages `<order>_Title_Case.py`; kept for st.navigation() page identity even
+# though app/Home.py now drives sidebar order/labels explicitly.
 "app/Home.py" = ["N999"]
-"app/pages/*.py" = ["N999"]
+"app/views/*.py" = ["N999"]
 
 [tool.black]
 line-length = 100

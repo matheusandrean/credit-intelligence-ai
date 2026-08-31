@@ -23,7 +23,7 @@ pytestmark = pytest.mark.skipif(
 )
 
 APP_DIR = PROJECT_ROOT / "app"
-PAGE_FILES = [APP_DIR / "Home.py", *sorted((APP_DIR / "pages").glob("*.py"))]
+PAGE_FILES = [APP_DIR / "Home.py", *sorted((APP_DIR / "views").glob("*.py"))]
 
 
 @pytest.mark.parametrize("page_path", PAGE_FILES, ids=[p.name for p in PAGE_FILES])

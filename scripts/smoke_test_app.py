@@ -11,7 +11,7 @@ from pathlib import Path
 
 from streamlit.testing.v1 import AppTest
 
-PAGES = sorted((Path(__file__).resolve().parents[1] / "app" / "pages").glob("*.py"))
+PAGES = sorted((Path(__file__).resolve().parents[1] / "app" / "views").glob("*.py"))
 HOME = Path(__file__).resolve().parents[1] / "app" / "Home.py"
 
 failed = False

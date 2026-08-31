@@ -217,7 +217,7 @@ Quais são os principais indicadores de drift do modelo?
 Gere um resumo executivo da carteira.
 ```
 
-Mais exemplos em `app/pages/5_AI_Credit_Analyst.py` e
+Mais exemplos em `app/views/5_AI_Credit_Analyst.py` e
 `evaluation/credit_questions.json` (o conjunto de avaliação — 15/15 de
 acurácia na seleção de ferramentas, veja
 [`docs/LLM_EVALUATION.md`](docs/LLM_EVALUATION.md)).
