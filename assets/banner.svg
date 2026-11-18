@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="240" viewBox="0 0 1200 240" role="img" aria-labelledby="title desc">
+  <title id="title">Credit Intelligence AI</title>
+  <desc id="desc">Credit risk, explainability and grounded GenAI</desc>
+  <rect width="1200" height="240" rx="16" fill="#0B1628"/>
+  <rect x="40" y="40" width="4" height="160" rx="2" fill="#22D3EE"/>
+  <g font-family="Segoe UI, Arial, sans-serif">
+    <text x="68" y="66" fill="#22D3EE" font-size="14" letter-spacing="3">FINANCIAL INTELLIGENCE</text>
+    <text x="68" y="126" fill="#F8FAFC" font-size="40" font-weight="600">Credit Intelligence AI</text>
+    <text x="68" y="170" fill="#CBD5E1" font-size="20">Credit risk, explainability and grounded GenAI</text>
+  </g>
+  <path d="M1080 70h50v100h-100v-50" fill="none" stroke="#22D3EE" stroke-width="2" opacity=".45"/>
+</svg>

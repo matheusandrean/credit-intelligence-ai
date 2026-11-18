@@ -1,3 +1,5 @@
+![Credit Intelligence AI](assets/banner.svg)
+
 # Credit Intelligence AI
 
 **Inteligência de risco de crédito explicável — modelos quantitativos, IA generativa e supervisão humana, trabalhando juntos.**
@@ -7,8 +9,16 @@ Português | [English](README.md)
 ![CI](https://github.com/matheusandrean/credit-intelligence-ai/actions/workflows/ci.yml/badge.svg)
 ![Python](https://img.shields.io/badge/python-3.12-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
-![Tests](https://img.shields.io/badge/tests-153%20passing-brightgreen)
-![Coverage](https://img.shields.io/badge/coverage-84%25-brightgreen)
+
+## Explore o projeto
+
+[Executar localmente](#como-executar) · [Arquitetura](ARCHITECTURE.md) · [Model card](MODEL_CARD.pt-BR.md) · [Data card](DATA_CARD.pt-BR.md) · [Governança](GOVERNANCE.pt-BR.md) · [Limitações](docs/LIMITATIONS.md)
+
+**Matheus Marcondes · Cofundador da GovernandoAI**
+
+Atuação: Data Science, GenAI Engineering, Machine Learning, Data Governance e Financial Intelligence.
+
+> **Status das evidências:** métricas de modelos e contagens de testes abaixo são resultados históricos documentados no projeto original. Esta atualização de apresentação não constitui uma nova execução de treinamento ou avaliação. Regenere os artefatos e consulte a CI antes de considerá-los atuais.
 
 ---
 *Resumo*
@@ -363,7 +373,4 @@ instituição que o utilizar. Todos os dados são sintéticos. Veja
 
 ## Autor
 
-**Matheus Marcondes** — Analista de MIS, evoluindo em direção a Crédito /
-Analytics / Data Science. Este projeto demonstra domínio ponta a ponta de
-uma plataforma de Credit Intelligence: engenharia de dados, modelagem de
-risco de crédito, IA explicável, IA generativa, MLOps e governança.
+**Matheus Marcondes** — Cofundador da GovernandoAI. Atuação em Data Science, GenAI Engineering, Machine Learning, Data Governance e Financial Intelligence. Este projeto conecta modelagem de risco de crédito, explicabilidade, IA generativa, MLOps e governança.

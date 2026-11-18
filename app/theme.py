@@ -17,10 +17,12 @@ import streamlit as st
 from src.llm.tools.context import get_tool_context
 from src.utils.config import PROJECT_ROOT, get_settings
 
-PRIMARY = "#0B3D91"
-INK = "#101828"
-MUTED = "#475467"
-SURFACE = "#F5F7FA"
+PRIMARY = "#0E7490"
+NAVY = "#0B1628"
+ACCENT = "#22D3EE"
+INK = "#172B44"
+MUTED = "#52647A"
+SURFACE = "#F4F8FC"
 BAND_COLORS = {
     "A": "#1B7A4C",
     "B": "#4C9F70",
@@ -34,8 +36,9 @@ CUSTOM_CSS = f"""
     .stApp {{ background-color: {SURFACE}; }}
     h1, h2, h3 {{ color: {INK}; font-weight: 650; }}
     p, li, span, label {{ color: {INK}; }}
-    [data-testid="stSidebar"] {{ background-color: {INK}; }}
+    [data-testid="stSidebar"] {{ background-color: {NAVY}; }}
     [data-testid="stSidebar"] * {{ color: {SURFACE}; }}
+    [data-testid="stSidebar"] a:focus-visible {{ outline: 2px solid {ACCENT}; }}
     [data-testid="stMetricValue"] {{ color: {PRIMARY}; font-weight: 700; }}
     [data-testid="stMetricLabel"] {{ color: {MUTED}; }}
     .disclaimer-box {{
@@ -48,7 +51,7 @@ CUSTOM_CSS = f"""
         margin-bottom: 1rem;
     }}
     .sim-box {{
-        background-color: #EAF1FB;
+        background-color: #ECFEFF;
         border-left: 4px solid {PRIMARY};
         padding: 0.75rem 1rem;
         border-radius: 4px;
